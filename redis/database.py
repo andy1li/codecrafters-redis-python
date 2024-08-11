@@ -23,8 +23,7 @@ class Database:
         self.store: Dict[str, tuple[str, Optional[float]]] = {}
         self.stream = Stream()
         self.config = vars(args)
-        self.port = str(args.port or DEFAULT_PORT)
-        self.role: str
+        self.port = args.port or DEFAULT_PORT
 
         self.rdb_path = os.path.join(args.dir or '', args.dbfilename or '')
         if os.path.exists(self.rdb_path):

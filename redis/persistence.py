@@ -1,6 +1,7 @@
 import struct
 from typing import Any, Dict, Optional
 
+
 class Persistence:
     def __init__(self, db: Any):
         self.db = db
@@ -15,8 +16,10 @@ class Persistence:
             self._verify_magic()
             self._set_version()
             while True:
-                try: self._parse_next()
-                except StopIteration: break
+                try:
+                    self._parse_next()
+                except StopIteration:
+                    break
 
     def _verify_magic(self):
         magic = self.file.read(5)
@@ -28,6 +31,7 @@ class Persistence:
 
     def _parse_next(self):
         opcode = self.file.read(1)
+        # fmt: off
         match opcode:
             case b'\xFA': self._set_aux()
             case b'\xFB': self._set_resizedb()
@@ -35,6 +39,7 @@ class Persistence:
             case b'\xFE': self._set_selectdb()
             case b'\xFF': self._set_checksum(); raise StopIteration
             case b'\x00': self._set_kv_pair()
+        # fmt: on
 
     def _set_aux(self):
         key = self._read_string()
@@ -75,8 +80,9 @@ class Persistence:
         byte = self.file.read(1)
         length = struct.unpack('B', byte)[0]
         crumb = length >> 6
+        # fmt: off
         match crumb:
             case 0b00: return length
             case 0b11: return '8 bit integer'
             case _   : return None
-            
+        # fmt: on

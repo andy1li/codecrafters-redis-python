@@ -117,7 +117,7 @@ class DatabaseReplica(Database):
     def __init__(self, args: Namespace):
         super().__init__(args)
         self.role = 'slave'
-        master_host, master_port = args.replicaof
+        master_host, master_port = args.replicaof.split()
         self.replicaof = (master_host, int(master_port))
         self.master: ReplicaConnection
         self.slave_repl_offset = 0
